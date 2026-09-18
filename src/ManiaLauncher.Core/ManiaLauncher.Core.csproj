@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ManiaLauncher.Core</RootNamespace>
+    <AssemblyName>ManiaLauncher.Core</AssemblyName>
+    <Version>1.0.0</Version>
+    <Authors>maniacalkid</Authors>
+    <Company>Mania AI</Company>
+    <Description>Core logic for Mania Launcher - Open Source Minecraft Launcher</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

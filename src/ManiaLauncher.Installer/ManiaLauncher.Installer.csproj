@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>ManiaLauncher.Installer</AssemblyName>
+    <RootNamespace>ManiaLauncher.Installer</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>maniacalkid</Authors>
+    <Company>Mania AI</Company>
+    <Product>Mania Launcher Installer</Product>
+    <Description>Installer for Mania Launcher</Description>
+  </PropertyGroup>
+
+</Project>

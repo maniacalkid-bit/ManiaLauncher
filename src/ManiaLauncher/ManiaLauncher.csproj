@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
+    <AssemblyName>ManiaLauncher</AssemblyName>
+    <RootNamespace>ManiaLauncher</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>maniacalkid</Authors>
+    <Company>Mania AI</Company>
+    <Product>Mania Launcher</Product>
+    <Description>Open Source Minecraft Launcher by Mania AI</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ManiaLauncher.Core\ManiaLauncher.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

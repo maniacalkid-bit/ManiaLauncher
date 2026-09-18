@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{194F680F-8B0B-4BD6-B0F6-E3A130CC6EB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaLauncher.Core", "src\ManiaLauncher.Core\ManiaLauncher.Core.csproj", "{F3268343-3446-498C-ABBE-F760976C907F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaLauncher", "src\ManiaLauncher\ManiaLauncher.csproj", "{7734677E-50C7-405D-A388-0E0DB9CBAC6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaLauncher.Installer", "src\ManiaLauncher.Installer\ManiaLauncher.Installer.csproj", "{DD4EA948-6BCE-4730-B840-D6B667C15956}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3268343-3446-498C-ABBE-F760976C907F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3268343-3446-498C-ABBE-F760976C907F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3268343-3446-498C-ABBE-F760976C907F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3268343-3446-498C-ABBE-F760976C907F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7734677E-50C7-405D-A388-0E0DB9CBAC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7734677E-50C7-405D-A388-0E0DB9CBAC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7734677E-50C7-405D-A388-0E0DB9CBAC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7734677E-50C7-405D-A388-0E0DB9CBAC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD4EA948-6BCE-4730-B840-D6B667C15956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD4EA948-6BCE-4730-B840-D6B667C15956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD4EA948-6BCE-4730-B840-D6B667C15956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD4EA948-6BCE-4730-B840-D6B667C15956}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F3268343-3446-498C-ABBE-F760976C907F} = {194F680F-8B0B-4BD6-B0F6-E3A130CC6EB3}
+		{7734677E-50C7-405D-A388-0E0DB9CBAC6D} = {194F680F-8B0B-4BD6-B0F6-E3A130CC6EB3}
+		{DD4EA948-6BCE-4730-B840-D6B667C15956} = {194F680F-8B0B-4BD6-B0F6-E3A130CC6EB3}
+	EndGlobalSection
+EndGlobal
