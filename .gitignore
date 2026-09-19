@@ -5,6 +5,9 @@ dist/
 publish/
 *.user
 
+# Local-only landing site (not published to the repo)
+website/
+
 # Local NuGet offline feed & caches (not part of source)
 .offlinefeed/
 .nugettest/

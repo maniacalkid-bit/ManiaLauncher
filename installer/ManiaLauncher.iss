@@ -1,4 +1,4 @@
-﻿; ============================================================
+; ============================================================
 ;  Mania Launcher — Inno Setup script
 ;  Owner: maniacalkid · License: MIT
 ;  Build:  ISCC.exe ManiaLauncher.iss
@@ -8,7 +8,7 @@
 #define MyAppName        "Mania Launcher"
 #define MyAppVersion     "1.1.0"
 #define MyAppPublisher   "maniacalkid"
-#define MyAppURL         "https://github.com/maniacalkid/ManiaLauncher"
+#define MyAppURL         "https://github.com/maniacalkid-bit/ManiaLauncher"
 #define MyAppExeName     "ManiaLauncher.exe"
 #define PublishDir       "..\publish\portable"
 

@@ -120,7 +120,7 @@ Portable-режим данных: задайте переменную окруж
 Требуется [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ```bash
-git clone https://github.com/maniacalkid/ManiaLauncher
+git clone https://github.com/maniacalkid-bit/ManiaLauncher
 cd ManiaLauncher
 dotnet build src/ManiaLauncher/ManiaLauncher.csproj -c Release
 ```
