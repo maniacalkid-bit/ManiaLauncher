@@ -30,6 +30,8 @@ public sealed class MainViewModel : ViewModelBase
         OpenGameDirCommand = new RelayCommand(_ => OpenFolder(SettingsService.Instance.GameDirectory));
         OpenLogsCommand = new RelayCommand(_ => OpenFolder(AppInfo.LogsDir));
         ResetSettingsCommand = new RelayCommand(_ => ResetSettings());
+        OpenAdLinkCommand = new RelayCommand(_ => AdService.Instance.OpenLink());
+        DismissAdCommand = new RelayCommand(_ => AdService.Instance.Dismiss());
 
         LoadSettingsIntoUi();
         _ = InitializeAsync();
@@ -82,7 +84,7 @@ public sealed class MainViewModel : ViewModelBase
         set => Set(ref _canPlay, value);
     }
 
-    private string _statusText = "Loading…";
+    private string _statusText = "Загрузка…";
     public string StatusText
     {
         get => _statusText;
@@ -178,7 +180,7 @@ public sealed class MainViewModel : ViewModelBase
         set { Set(ref _maxRamMb, value); OnPropertyChanged(nameof(MaxRamGbLabel)); }
     }
 
-    public string MaxRamGbLabel => $"{MaxRamMb / 1024.0:0.0} GB";
+    public string MaxRamGbLabel => $"{MaxRamMb / 1024.0:0.0} ГБ";
 
     private ObservableCollection<JavaInstall> _javaInstalls = new();
     public ObservableCollection<JavaInstall> JavaInstalls
@@ -215,6 +217,11 @@ public sealed class MainViewModel : ViewModelBase
     public RelayCommand OpenGameDirCommand { get; }
     public RelayCommand OpenLogsCommand { get; }
     public RelayCommand ResetSettingsCommand { get; }
+    public RelayCommand OpenAdLinkCommand { get; }
+    public RelayCommand DismissAdCommand { get; }
+
+    /// <summary>Промо-баннер на главной странице (управляется удалённым JSON).</summary>
+    public AdService Ads => AdService.Instance;
 
     // ================= Initialization =================
 
@@ -223,20 +230,24 @@ public sealed class MainViewModel : ViewModelBase
         IsBusy = true;
         try
         {
-            StatusText = "Scanning Java installations…";
+            // Промо-баннер грузится отдельно и в самом начале: медленный или
+            // недоступный удалённый JSON не должен задерживать подготовку лаунчера.
+            _ = AdService.Instance.LoadAsync(_cts.Token);
+
+            StatusText = "Поиск установленных Java…";
             await JavaService.Instance.ScanAsync();
             RefreshJavaList();
 
-            StatusText = "Loading version list…";
+            StatusText = "Загрузка списка версий…";
             await RefreshVersionsAsync(silent: true);
 
-            StatusText = "Ready";
+            StatusText = "Готово";
         }
         catch (Exception ex)
         {
             LogService.Instance.Error($"Init failed: {ex}");
-            StatusText = $"Error: {ex.Message}";
-            AppendConsole($"[ERROR] {ex.Message}");
+            StatusText = $"Ошибка: {ex.Message}";
+            AppendConsole($"[ОШИБКА] {ex.Message}");
         }
         finally
         {
@@ -252,16 +263,16 @@ public sealed class MainViewModel : ViewModelBase
             var launcher = GameLauncherService.Instance.GetLauncher();
             await VersionService.Instance.LoadAsync(launcher, _cts.Token);
             ApplyVersionFilter(restoreSelection: true);
-            if (!silent) StatusText = "Version list updated";
+            if (!silent) StatusText = "Список версий обновлён";
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             LogService.Instance.Error($"Refresh versions failed: {ex}");
-            StatusText = $"Could not load versions: {ex.Message}";
-            AppendConsole($"[ERROR] {ex.Message}");
+            StatusText = $"Не удалось загрузить версии: {ex.Message}";
+            AppendConsole($"[ОШИБКА] {ex.Message}");
             MessageBox.Show(
-                "Failed to load the version list from Mojang.\n\n" + ex.Message +
-                "\n\nCheck your internet connection and try again.",
+                "Не удалось загрузить список версий с серверов Mojang.\n\n" + ex.Message +
+                "\n\nПроверьте подключение к интернету и повторите попытку.",
                 AppInfo.Title, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
         finally
@@ -294,8 +305,8 @@ public sealed class MainViewModel : ViewModelBase
     {
         App.Current.Dispatcher.Invoke(() =>
         {
-            AppendConsole($"[NEW] Mojang released a new version: {name}");
-            StatusText = $"New version available: {name}";
+            AppendConsole($"[НОВОЕ] Mojang выпустила новую версию: {name}");
+            StatusText = $"Доступна новая версия: {name}";
         });
     }
 
@@ -328,8 +339,8 @@ public sealed class MainViewModel : ViewModelBase
 
             process.Exited += (_, _) => App.Current.Dispatcher.Invoke(() =>
             {
-                StatusText = $"Game exited (code {process.ExitCode})";
-                AppendConsole($"[GAME] exited with code {process.ExitCode}");
+                StatusText = $"Игра завершена (код {process.ExitCode})";
+                AppendConsole($"[ИГРА] завершилась с кодом {process.ExitCode}");
             });
 
             Progress = 1;
@@ -342,10 +353,10 @@ public sealed class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             LogService.Instance.Error($"Launch failed: {ex}");
-            StatusText = $"Launch failed: {ex.Message}";
-            AppendConsole($"[ERROR] Launch failed: {ex.Message}");
+            StatusText = $"Сбой запуска: {ex.Message}";
+            AppendConsole($"[ОШИБКА] Сбой запуска: {ex.Message}");
             MessageBox.Show(
-                $"Failed to launch {version.Name}.\n\n{ex.Message}",
+                $"Не удалось запустить {version.Name}.\n\n{ex.Message}",
                 AppInfo.Title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
@@ -364,7 +375,7 @@ public sealed class MainViewModel : ViewModelBase
             var combined = p.FileRatio * 0.5 + p.ByteRatio * 0.5;
             Progress = Math.Clamp(combined, 0, 0.99);
             if (!string.IsNullOrEmpty(p.CurrentFile))
-                StatusText = $"Installing ({p.FilesDone}/{p.FilesTotal}) {p.CurrentFile}";
+                StatusText = $"Установка ({p.FilesDone}/{p.FilesTotal}) {p.CurrentFile}";
         });
     }
 
@@ -378,7 +389,7 @@ public sealed class MainViewModel : ViewModelBase
         if (!OfflineAccount.IsValidUsername(name))
         {
             MessageBox.Show(
-                "Invalid username.\n\nRules: 2–16 characters, letters, digits and underscore only.",
+                "Недопустимое имя.\n\nПравила: 2–16 символов — только буквы, цифры и подчёркивание.",
                 AppInfo.Title, MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
@@ -386,7 +397,7 @@ public sealed class MainViewModel : ViewModelBase
         AccountService.Instance.Add(name);
         SelectedAccount = AccountService.Instance.SelectedAccount;
         NewAccountName = "";
-        AppendConsole($"[ACCOUNT] added offline account '{name}'");
+        AppendConsole($"[АККАУНТ] добавлен офлайн-аккаунт '{name}'");
     }
 
     private void RemoveAccount()
@@ -395,7 +406,7 @@ public sealed class MainViewModel : ViewModelBase
         if (acc == null) return;
         if (Accounts.Count <= 1)
         {
-            MessageBox.Show("Keep at least one account for testing.",
+            MessageBox.Show("Оставьте хотя бы один аккаунт для тестирования.",
                 AppInfo.Title, MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
@@ -438,14 +449,14 @@ public sealed class MainViewModel : ViewModelBase
         s.CloseLauncherOnStart = CloseLauncherOnStart;
         s.JavaPath = SelectedJava?.Path;
         s.Save();
-        StatusText = "Settings saved";
-        AppendConsole("[SETTINGS] saved");
+        StatusText = "Настройки сохранены";
+        AppendConsole("[НАСТРОЙКИ] сохранены");
     }
 
     private void ResetSettings()
     {
         var result = MessageBox.Show(
-            "Reset all settings to defaults?\n\nGame directory will point back to %APPDATA%\\ManiaLauncher\\game. Installed game files are not deleted.",
+            "Сбросить все настройки к значениям по умолчанию?\n\nИгровая папка снова будет указывать на %APPDATA%\\ManiaLauncher\\game. Установленные файлы игры не удаляются.",
             AppInfo.Title, MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result != MessageBoxResult.Yes) return;
 
@@ -459,15 +470,15 @@ public sealed class MainViewModel : ViewModelBase
         s.Save();
         LoadSettingsIntoUi();
         RefreshJavaList();
-        StatusText = "Settings reset to defaults";
-        AppendConsole("[SETTINGS] reset to defaults");
+        StatusText = "Настройки сброшены к значениям по умолчанию";
+        AppendConsole("[НАСТРОЙКИ] сброшены к значениям по умолчанию");
     }
 
     public void BrowseGameDirectory()
     {
         var dlg = new Microsoft.Win32.OpenFolderDialog
         {
-            Title = "Choose game directory",
+            Title = "Выберите игровую папку",
             InitialDirectory = Directory.Exists(GameDirectory) ? GameDirectory : null
         };
         if (dlg.ShowDialog() == true)

@@ -1,4 +1,4 @@
-using CmlLib.Core;
+﻿using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Installers;
 using CmlLib.Core.ProcessBuilder;
@@ -85,7 +85,7 @@ public sealed class GameLauncherService
     {
         var launcher = GetLauncher();
 
-        StatusChanged?.Invoke($"Preparing {versionName}…");
+        StatusChanged?.Invoke($"Подготовка {versionName}…");
         var version = await launcher.GetVersionAsync(versionName, ct);
 
         // Java selection: custom path wins, otherwise best match for the version.
@@ -107,14 +107,14 @@ public sealed class GameLauncherService
 
         if (string.IsNullOrWhiteSpace(javaPath) || !File.Exists(javaPath))
             throw new FileNotFoundException(
-                "No Java runtime found. Install Java 21 (recommended) or set a custom java path in Settings.");
+                "Java не найдена. Установите Java 21 (рекомендуется) или укажите свой путь к java в настройках.");
 
         var session = MSession.CreateOfflineSession(account.Username);
 
-        StatusChanged?.Invoke($"Installing {versionName}…");
+        StatusChanged?.Invoke($"Установка {versionName}…");
         await launcher.InstallAsync(version, ct);
 
-        StatusChanged?.Invoke($"Launching {versionName}…");
+        StatusChanged?.Invoke($"Запуск {versionName}…");
         var options = new MLaunchOption
         {
             Session = session,
@@ -133,7 +133,7 @@ public sealed class GameLauncherService
 
         LogService.Instance.Info(
             $"Launched {versionName} as {account.Username} (pid={process.Id}, java={javaPath})");
-        StatusChanged?.Invoke($"Running {versionName}");
+        StatusChanged?.Invoke($"Игра запущена: {versionName}");
         return process;
     }
 }

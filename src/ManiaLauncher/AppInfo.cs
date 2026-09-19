@@ -12,6 +12,14 @@ public static class AppInfo
     public const string Owner = "maniacalkid";
     public const string Title = "Mania Launcher";
 
+    /// <summary>
+    /// Remote raw JSON that controls the promotional banner on the Home page.
+    /// Edit that file in the repository to change the banner for every user —
+    /// no launcher update required.
+    /// </summary>
+    public const string AdsUrl =
+        "https://raw.githubusercontent.com/maniacalkid-bit/mania-ads/refs/heads/main/ads.json";
+
     public static string Version { get; private set; } = "1.0.0";
 
     /// <summary>%APPDATA%\ManiaLauncher</summary>

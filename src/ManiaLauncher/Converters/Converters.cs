@@ -101,3 +101,48 @@ public sealed class NullToBoolConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
+
+/// <summary>Non-null object -> Visible (used for optional UI blocks).</summary>
+public sealed class NullToVisibilityConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value != null ? Visibility.Visible : Visibility.Collapsed;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+/// <summary>
+/// "#RRGGBB"/"#AARRGGBB" string -> SolidColorBrush.
+/// ConverterParameter is the fallback hex used when the value is null or invalid.
+/// </summary>
+public sealed class HexToBrushConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var hex = (value as string)?.Trim();
+        if (string.IsNullOrEmpty(hex)) hex = parameter as string;
+        if (string.IsNullOrEmpty(hex)) return Brushes.Transparent;
+
+        try
+        {
+            return new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
+        }
+        catch
+        {
+            try
+            {
+                return parameter is string fb && !string.IsNullOrEmpty(fb)
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString(fb))
+                    : Brushes.Transparent;
+            }
+            catch
+            {
+                return Brushes.Transparent;
+            }
+        }
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}

@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Threading;
 using ManiaLauncher.Services;
 
@@ -31,9 +31,9 @@ public partial class App : Application
     {
         LogService.Instance.Fatal($"Unhandled UI exception: {e.Exception}");
         MessageBox.Show(
-            "An unexpected error occurred:\n\n" + e.Exception.Message +
-            "\n\nDetails were written to the log file.",
-            AppInfo.Title + " — Error",
+            "Произошла непредвиденная ошибка:\n\n" + e.Exception.Message +
+            "\n\nПодробности записаны в файл журнала.",
+            AppInfo.Title + " — Ошибка",
             MessageBoxButton.OK, MessageBoxImage.Error);
         e.Handled = true;
     }

@@ -1,4 +1,4 @@
-using ManiaLauncher.Services;
+﻿using ManiaLauncher.Services;
 using ManiaLauncher.ViewModels;
 using System.ComponentModel;
 using System.Windows;
@@ -104,4 +104,27 @@ public partial class MainWindow : Window
     // ---------- settings page ----------
 
     private void BrowseGameDir_Click(object sender, RoutedEventArgs e) => _vm.BrowseGameDirectory();
+
+    // ---------- home page: promo banner ----------
+
+    private void AdBanner_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        // The dismiss button swallows its own clicks, so anything else
+        // that reaches here is "open the banner link".
+        if (_vm.Ads.Current is { HasLink: true })
+            _vm.OpenAdLinkCommand.Execute(null);
+    }
+
+    private void AdDismiss_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        _vm.DismissAdCommand.Execute(null);
+    }
+
+    private void AdImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+    {
+        // A broken remote image URL must never look like a crash: just hide the image.
+        if (sender is Image img) img.Visibility = Visibility.Collapsed;
+        LogService.Instance.Warn($"Ads: banner image failed to load ({e.ErrorException.Message})");
+    }
 }

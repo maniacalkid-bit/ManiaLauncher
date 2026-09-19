@@ -89,6 +89,21 @@ public sealed class SettingsService : INotifyPropertyChanged
         set { _closeLauncherOnStart = value; Save(); OnChanged(); }
     }
 
+    private List<string> _dismissedAds = new();
+    /// <summary>Fingerprints of promotional banners the user has closed.</summary>
+    public IReadOnlyList<string> DismissedAds => _dismissedAds;
+
+    public bool IsAdDismissed(string fingerprint) =>
+        _dismissedAds.Contains(fingerprint, StringComparer.Ordinal);
+
+    public void AddDismissedAd(string fingerprint)
+    {
+        if (string.IsNullOrWhiteSpace(fingerprint)) return;
+        if (_dismissedAds.Contains(fingerprint, StringComparer.Ordinal)) return;
+        _dismissedAds.Add(fingerprint);
+        Save();
+    }
+
     private int _windowWidth = 1000;
     public int WindowWidth
     {
@@ -130,6 +145,7 @@ public sealed class SettingsService : INotifyPropertyChanged
             _closeLauncherOnStart = dto.CloseLauncherOnStart ?? true;
             _windowWidth = dto.WindowWidth is > 200 ? dto.WindowWidth.Value : 1000;
             _windowHeight = dto.WindowHeight is > 200 ? dto.WindowHeight.Value : 640;
+            _dismissedAds = dto.DismissedAds ?? new List<string>();
         }
         catch (Exception ex)
         {
@@ -152,7 +168,8 @@ public sealed class SettingsService : INotifyPropertyChanged
                 ShowOldVersions = _showOldVersions,
                 CloseLauncherOnStart = _closeLauncherOnStart,
                 WindowWidth = _windowWidth,
-                WindowHeight = _windowHeight
+                WindowHeight = _windowHeight,
+                DismissedAds = _dismissedAds
             };
             Directory.CreateDirectory(AppInfo.AppDataDir);
             File.WriteAllText(FilePath, JsonSerializer.Serialize(dto, JsonOptions));
@@ -178,5 +195,6 @@ public sealed class SettingsService : INotifyPropertyChanged
         public bool? CloseLauncherOnStart { get; set; }
         public int? WindowWidth { get; set; }
         public int? WindowHeight { get; set; }
+        public List<string>? DismissedAds { get; set; }
     }
 }

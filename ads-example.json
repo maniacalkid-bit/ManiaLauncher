@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "id": "example-2026-09",
+  "title": "Defining SMP",
+  "text": "Заходи на Defining SMP. Лучший SMP сервер для игры! Нажми на баннер, чтобы открыть сайт.",
+  "imageUrl": null,
+  "linkUrl": "https://definingsmp.vercel.app/",
+  "backgroundColor": "#1E90FF",
+  "textColor": "#FFFFFF",
+  "dismissible": true
+}

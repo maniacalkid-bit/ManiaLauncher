@@ -26,11 +26,11 @@ public sealed class GameVersionItem : INotifyPropertyChanged
 
     public string TypeLabel => Type switch
     {
-        MVersionType.Release => "release",
-        MVersionType.Snapshot => "snapshot",
-        MVersionType.OldBeta => "old beta",
-        MVersionType.OldAlpha => "old alpha",
-        _ => "modded"
+        MVersionType.Release => "релиз",
+        MVersionType.Snapshot => "снапшот",
+        MVersionType.OldBeta => "старая бета",
+        MVersionType.OldAlpha => "старая альфа",
+        _ => "своя"
     };
 
     public bool IsInstalled { get => _isInstalled; set { _isInstalled = value; OnChanged(); } }
