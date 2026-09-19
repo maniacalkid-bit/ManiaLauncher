@@ -1,0 +1,27 @@
+# Build output
+bin/
+obj/
+dist/
+publish/
+*.user
+
+# Local NuGet offline feed & caches (not part of source)
+.offlinefeed/
+.nugettest/
+.nettest/
+.packages/
+.smoketest/
+.smoketest2/
+
+# Downloaded build tools (Inno Setup etc.)
+tools/downloads/
+tools/InnoSetup/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+Desktop.ini
